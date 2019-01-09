@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MLPMnistTwoLayerExample",
+            "request": "launch",
+            "mainClass": "MLPMnistTwoLayerExample",
+            "projectName": "dj4j-experiment"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MLPClassifierMoon",
+            "request": "launch",
+            "mainClass": "MLPClassifierMoon",
+            "projectName": "dj4j-experiment"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MLPClassifierLinear",
+            "request": "launch",
+            "mainClass": "MLPClassifierLinear",
+            "projectName": "dj4j-experiment"
+        }
+    ]
+}
