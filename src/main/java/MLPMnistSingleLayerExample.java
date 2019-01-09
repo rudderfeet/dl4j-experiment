@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * add up to 1. The highest of these normalized values is picked as the predicted class.
  *
  */
+@SuppressWarnings("deprecation")
 public class MLPMnistSingleLayerExample {
 
     private static Logger log = LoggerFactory.getLogger(MLPMnistSingleLayerExample.class);

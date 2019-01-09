@@ -5,10 +5,8 @@ import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -33,6 +31,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
  * @author Alex Black (added plots)
  *
  */
+@SuppressWarnings("deprecation")
 public class MLPClassifierMoon {
 
     public static void main(String[] args) throws Exception {

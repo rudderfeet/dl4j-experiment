@@ -31,6 +31,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
  * @author Alex Black (added plots)
  *
  */
+@SuppressWarnings("deprecation")
 public class MLPClassifierLinear {
 
 

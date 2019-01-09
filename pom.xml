@@ -17,7 +17,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shadedClassifier>bin</shadedClassifier>
 
-
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
@@ -282,28 +281,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
-            </plugin>
-
-		    <!-- Maven Enforcer: Ensures user has an up to date version of Maven before building -->
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-default</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[${maven.minimum.version},)</version>
-                                    <message>********** Minimum Maven Version is ${maven.minimum.version}. Please upgrade Maven before continuing (run "mvn --version" to check). **********</message>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
         </plugins>
