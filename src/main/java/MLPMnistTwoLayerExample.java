@@ -1,6 +1,4 @@
-
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -8,6 +6,7 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -16,7 +15,6 @@ import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /** A slightly more involved multilayered (MLP) applied to digit classification for the MNIST dataset (http://yann.lecun.com/exdb/mnist/).
 *
@@ -39,9 +37,9 @@ import org.slf4j.LoggerFactory;
 * add up to 1. The highest of these normalized values is picked as the predicted class.
 *
 */
-@SuppressWarnings("deprecation")
 public class MLPMnistTwoLayerExample {
-
+	
+	/* Logger object for this class */
     private static Logger log = LoggerFactory.getLogger(MLPMnistTwoLayerExample.class);
 
     public static void main(String[] args) throws Exception {
@@ -57,7 +55,6 @@ public class MLPMnistTwoLayerExample {
         //Get the DataSetIterators:
         DataSetIterator mnistTrain = new MnistDataSetIterator(batchSize, true, rngSeed);
         DataSetIterator mnistTest = new MnistDataSetIterator(batchSize, false, rngSeed);
-
 
         log.info("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
@@ -84,14 +81,13 @@ public class MLPMnistTwoLayerExample {
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
-        model.setListeners(new ScoreIterationListener(5));  //print the score with every iteration
+        model.setListeners(new ScoreIterationListener(10));  //print the score with every iteration
 
         log.info("Train model....");
         for( int i=0; i<numEpochs; i++ ){
         	log.info("Epoch " + i);
             model.fit(mnistTrain);
         }
-
 
         log.info("Evaluate model....");
         Evaluation eval = new Evaluation(outputNum); //create an evaluation object with 10 possible classes

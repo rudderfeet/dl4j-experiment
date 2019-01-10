@@ -3,9 +3,7 @@ import java.io.File;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
-import org.datavec.api.util.ClassPathResource;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -13,29 +11,36 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * "Linear" Data Classification Example
+ * "Linear" Shaped Data Classification Example.
  *
  * Based on the data from Jason Baldridge:
- * https://github.com/jasonbaldridge/try-tf/tree/master/simdata
- *
+ *  https://github.com/jasonbaldridge/try-tf/tree/master/simdata
+ * See: https://github.com/jasonbaldridge/try-tf
+ * 
  * @author Josh Patterson
  * @author Alex Black (added plots)
  *
  */
-@SuppressWarnings("deprecation")
 public class MLPClassifierLinear {
-
+	
+	/* Logger object for this class */
+    private static Logger log = LoggerFactory.getLogger(MLPClassifierLinear.class);
 
     public static void main(String[] args) throws Exception {
+    	
         int seed = 123;
         double learningRate = 0.01;
         int batchSize = 50;
@@ -50,7 +55,6 @@ public class MLPClassifierLinear {
 
         //Load the training data:
         RecordReader rr = new CSVRecordReader();
-//        rr.initialize(new FileSplit(new File("src/main/resources/classification/linear_data_train.csv")));
         rr.initialize(new FileSplit(new File(filenameTrain)));
         DataSetIterator trainIter = new RecordReaderDataSetIterator(rr,batchSize,0,2);
 
@@ -59,6 +63,7 @@ public class MLPClassifierLinear {
         rrTest.initialize(new FileSplit(new File(filenameTest)));
         DataSetIterator testIter = new RecordReaderDataSetIterator(rrTest,batchSize,0,2);
 
+        log.info("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .updater(new Nesterovs(learningRate, 0.9))
@@ -73,17 +78,16 @@ public class MLPClassifierLinear {
                         .nIn(numHiddenNodes).nOut(numOutputs).build())
                 .build();
 
-
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
         model.setListeners(new ScoreIterationListener(10));  //Print score every 10 parameter updates
 
-
+        log.info("Train model....");
         for ( int n = 0; n < nEpochs; n++) {
             model.fit( trainIter );
         }
 
-        System.out.println("Evaluate model....");
+        log.info("Evaluate model....");
         Evaluation eval = new Evaluation(numOutputs);
         while(testIter.hasNext()){
             DataSet t = testIter.next();
@@ -96,8 +100,7 @@ public class MLPClassifierLinear {
         }
 
         //Print the evaluation statistics
-        System.out.println(eval.stats());
-
+        log.info(eval.stats());
 
         //------------------------------------------------------------------------------------
         //Training is complete. Code that follows is for plotting the data & predictions only
@@ -135,7 +138,6 @@ public class MLPClassifierLinear {
         DataSet ds = trainIter.next();
         PlotUtil.plotTrainingData(ds.getFeatures(), ds.getLabels(), allXYPoints, predictionsAtXYPoints, nPointsPerAxis);
 
-
         //Get test data, run the test data through the network to generate predictions, and plot those predictions:
         rrTest.initialize(new FileSplit(new ClassPathResource("/linear_data_eval.csv").getFile()));
         rrTest.reset();
@@ -145,6 +147,7 @@ public class MLPClassifierLinear {
         INDArray testPredicted = model.output(ds.getFeatures());
         PlotUtil.plotTestData(ds.getFeatures(), ds.getLabels(), testPredicted, allXYPoints, predictionsAtXYPoints, nPointsPerAxis);
 
-        System.out.println("****************Example finished********************");
+        log.info("****************Example finished********************");
+        
     }
 }
