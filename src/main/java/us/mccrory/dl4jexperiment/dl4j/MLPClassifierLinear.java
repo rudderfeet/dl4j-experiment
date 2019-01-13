@@ -1,3 +1,4 @@
+package us.mccrory.dl4jexperiment.dl4j;
 import java.io.File;
 
 import org.datavec.api.records.reader.RecordReader;
@@ -24,36 +25,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * "Saturn" Shaped Data Classification Example.
+ * "Linear" Shaped Data Classification Example.
  *
  * Based on the data from Jason Baldridge:
- * 	https://github.com/jasonbaldridge/try-tf/tree/master/simdata
+ *  https://github.com/jasonbaldridge/try-tf/tree/master/simdata
  * See: https://github.com/jasonbaldridge/try-tf
- *
+ * 
  * @author Josh Patterson
  * @author Alex Black (added plots)
  *
  */
-public class MLPClassifierSaturn {
+public class MLPClassifierLinear {
 	
 	/* Logger object for this class */
-    private static Logger log = LoggerFactory.getLogger(MLPClassifierSaturn.class);
+    private static Logger log = LoggerFactory.getLogger(MLPClassifierLinear.class);
 
     public static void main(String[] args) throws Exception {
     	
-        Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
-        int batchSize = 50;
         int seed = 123;
-        double learningRate = 0.005;
-        //Number of epochs (full passes of the data)
+        double learningRate = 0.01;
+        int batchSize = 50;
         int nEpochs = 30;
 
         int numInputs = 2;
         int numOutputs = 2;
         int numHiddenNodes = 20;
 
-        final String filenameTrain  = new ClassPathResource("/saturn_data_train.csv").getFile().getPath();
-        final String filenameTest  = new ClassPathResource("/saturn_data_eval.csv").getFile().getPath();
+        final String filenameTrain  = new ClassPathResource("/linear_data_train.csv").getFile().getPath();
+        final String filenameTest  = new ClassPathResource("/linear_data_eval.csv").getFile().getPath();
 
         //Load the training data:
         RecordReader rr = new CSVRecordReader();
@@ -82,7 +81,7 @@ public class MLPClassifierSaturn {
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
-        model.setListeners(new ScoreIterationListener(10));    //Print score every 10 parameter updates
+        model.setListeners(new ScoreIterationListener(10));  //Print score every 10 parameter updates
 
         log.info("Train model....");
         for ( int n = 0; n < nEpochs; n++) {
@@ -101,16 +100,19 @@ public class MLPClassifierSaturn {
 
         }
 
+        //Print the evaluation statistics
         log.info(eval.stats());
+
         //------------------------------------------------------------------------------------
         //Training is complete. Code that follows is for plotting the data & predictions only
 
-        double xMin = -15;
-        double xMax = 15;
-        double yMin = -15;
-        double yMax = 15;
+        //Plot the data:
+        double xMin = 0;
+        double xMax = 1.0;
+        double yMin = -0.2;
+        double yMax = 0.8;
 
-        //Let's evaluate the predictions at every point in the x/y input space, and plot this in the background
+        //Let's evaluate the predictions at every point in the x/y input space
         int nPointsPerAxis = 100;
         double[][] evalPoints = new double[nPointsPerAxis*nPointsPerAxis][2];
         int count = 0;
@@ -130,23 +132,23 @@ public class MLPClassifierSaturn {
         INDArray predictionsAtXYPoints = model.output(allXYPoints);
 
         //Get all of the training data in a single array, and plot it:
-        rr.initialize(new FileSplit(new File(filenameTrain)));
+        rr.initialize(new FileSplit(new ClassPathResource("/linear_data_train.csv").getFile()));
         rr.reset();
-        int nTrainPoints = 500;
+        int nTrainPoints = 1000;
         trainIter = new RecordReaderDataSetIterator(rr,nTrainPoints,0,2);
         DataSet ds = trainIter.next();
         PlotUtil.plotTrainingData(ds.getFeatures(), ds.getLabels(), allXYPoints, predictionsAtXYPoints, nPointsPerAxis);
 
         //Get test data, run the test data through the network to generate predictions, and plot those predictions:
-        rrTest.initialize(new FileSplit(new File(filenameTest)));
+        rrTest.initialize(new FileSplit(new ClassPathResource("/linear_data_eval.csv").getFile()));
         rrTest.reset();
-        int nTestPoints = 100;
+        int nTestPoints = 500;
         testIter = new RecordReaderDataSetIterator(rrTest,nTestPoints,0,2);
         ds = testIter.next();
         INDArray testPredicted = model.output(ds.getFeatures());
         PlotUtil.plotTestData(ds.getFeatures(), ds.getLabels(), testPredicted, allXYPoints, predictionsAtXYPoints, nPointsPerAxis);
 
         log.info("****************Example finished********************");
+        
     }
-
 }

@@ -1,3 +1,4 @@
+package us.mccrory.dl4jexperiment.dl4j;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;

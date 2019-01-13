@@ -1,3 +1,4 @@
+package us.mccrory.dl4jexperiment.dl4j;
 import java.io.File;
 
 import org.datavec.api.records.reader.RecordReader;
