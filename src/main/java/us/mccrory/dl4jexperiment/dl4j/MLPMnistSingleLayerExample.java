@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * add up to 1. The highest of these normalized values is picked as the predicted class.
  *
  */
-public class MLPMnistSingleLayerExample {
+public class MLPMnistSingleLayerExample extends AbstractClassifier {
 
 	/* Logger object for this class */
     private static Logger log = LoggerFactory.getLogger(MLPMnistSingleLayerExample.class);
@@ -74,9 +74,7 @@ public class MLPMnistSingleLayerExample {
                 .build();
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
-        model.init();
-        //print the score with every 1 iteration
-        model.setListeners(new ScoreIterationListener(10));
+        initializeNetworkAndListeners(model);
 
         log.info("Train model....");
         for( int i=0; i<numEpochs; i++ ){

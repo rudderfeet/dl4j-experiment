@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 * add up to 1. The highest of these normalized values is picked as the predicted class.
 *
 */
-public class MLPMnistTwoLayerExample {
+public class MLPMnistTwoLayerExample extends AbstractClassifier {
 	
 	/* Logger object for this class */
     private static Logger log = LoggerFactory.getLogger(MLPMnistTwoLayerExample.class);
@@ -81,8 +81,7 @@ public class MLPMnistTwoLayerExample {
             .build();
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
-        model.init();
-        model.setListeners(new ScoreIterationListener(10));  //print the score with every iteration
+        initializeNetworkAndListeners(model);
 
         log.info("Train model....");
         for( int i=0; i<numEpochs; i++ ){

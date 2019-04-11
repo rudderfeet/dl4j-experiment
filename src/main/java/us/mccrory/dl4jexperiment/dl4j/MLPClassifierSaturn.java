@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author Alex Black (added plots)
  *
  */
-public class MLPClassifierSaturn {
+public class MLPClassifierSaturn extends AbstractClassifier {
 	
 	/* Logger object for this class */
     private static Logger log = LoggerFactory.getLogger(MLPClassifierSaturn.class);
@@ -82,8 +82,7 @@ public class MLPClassifierSaturn {
                 .build();
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
-        model.init();
-        model.setListeners(new ScoreIterationListener(10));    //Print score every 10 parameter updates
+        initializeNetworkAndListeners(model);
 
         log.info("Train model....");
         for ( int n = 0; n < nEpochs; n++) {
