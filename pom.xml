@@ -11,11 +11,12 @@
 	<name>DeepLearning4j Experiment based on DL4J Examples Parent</name>
 	<description>Examples of training different data sets</description>
 
+	<!-- Spring boot starter parent POM -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.2.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<version>2.1.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
