@@ -44,6 +44,7 @@
 		<javafx.runtime.lib.jar>${env.JAVAFX_HOME}/jfxrt.jar</javafx.runtime.lib.jar>
 		<aws.sdk.version>1.11.109</aws.sdk.version>
 		<jackson.version>2.9.8</jackson.version>
+		<bean-matchers.version>0.10</bean-matchers.version>
 
 	</properties>
 
@@ -65,9 +66,24 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Test support -->
 		<dependency>
+			<!-- Testing support for Spring context features -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- Testing support for mock objects -->
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- See https://github.com/orien/bean-matchers -->
+			<groupId>com.google.code.bean-matchers</groupId>
+			<artifactId>bean-matchers</artifactId>
+			<version>${bean-matchers.version}</version>
 			<scope>test</scope>
 		</dependency>
 
